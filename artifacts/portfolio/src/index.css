@@ -1,0 +1,312 @@
+@import url('https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,300..600;1,9..144,300..600&family=IBM+Plex+Mono:ital,wght@0,400;0,500;1,400&family=Inter:wght@400..700&display=swap');
+@import 'tailwindcss';
+@import 'tw-animate-css';
+@plugin "@tailwindcss/typography";
+
+@custom-variant dark (&:is(.dark *));
+
+@theme inline {
+  --color-background: hsl(var(--background));
+  --color-foreground: hsl(var(--foreground));
+  --color-border: hsl(var(--border));
+  --color-input: hsl(var(--input));
+  --color-ring: hsl(var(--ring));
+
+  --color-card: hsl(var(--card));
+  --color-card-foreground: hsl(var(--card-foreground));
+  --color-card-border: hsl(var(--card-border));
+
+  --color-popover: hsl(var(--popover));
+  --color-popover-foreground: hsl(var(--popover-foreground));
+  --color-popover-border: hsl(var(--popover-border));
+
+  --color-primary: hsl(var(--primary));
+  --color-primary-foreground: hsl(var(--primary-foreground));
+  --color-primary-border: var(--primary-border);
+
+  --color-secondary: hsl(var(--secondary));
+  --color-secondary-foreground: hsl(var(--secondary-foreground));
+  --color-secondary-border: var(--secondary-border);
+
+  --color-muted: hsl(var(--muted));
+  --color-muted-foreground: hsl(var(--muted-foreground));
+  --color-muted-border: var(--muted-border);
+
+  --color-accent: hsl(var(--accent));
+  --color-accent-foreground: hsl(var(--accent-foreground));
+  --color-accent-border: var(--accent-border);
+
+  --color-destructive: hsl(var(--destructive));
+  --color-destructive-foreground: hsl(var(--destructive-foreground));
+  --color-destructive-border: var(--destructive-border);
+
+  --font-sans: var(--font-sans);
+  --font-serif: var(--font-serif);
+  --font-mono: var(--font-mono);
+
+  --color-app-bg: var(--app-bg);
+  --color-app-bg-raised: var(--app-bg-raised);
+  --color-app-bg-glass: var(--app-bg-glass);
+  --color-app-line: var(--app-line);
+  --color-app-purple: var(--app-purple);
+  --color-app-purple-dim: var(--app-purple-dim);
+  --color-app-blue: var(--app-blue);
+  --color-app-gold: var(--app-gold);
+  --color-app-orange: var(--app-orange);
+  --color-app-green: var(--app-green);
+  --color-app-pink: var(--app-pink);
+  --color-app-white: var(--app-white);
+  --color-app-muted: var(--app-muted);
+  --color-app-muted-dim: var(--app-muted-dim);
+
+  --radius-sm: calc(var(--radius) - 4px);
+  --radius-md: calc(var(--radius) - 2px);
+  --radius-lg: var(--radius);
+  --radius-xl: calc(var(--radius) + 4px);
+}
+
+:root {
+  --app-bg: #08070D;
+  --app-bg-raised: #110D1C;
+  --app-bg-glass: rgba(255,255,255,0.035);
+  --app-line: rgba(255,255,255,0.09);
+  --app-purple: #9B7BFF;
+  --app-purple-dim: #4E3B99;
+  --app-blue: #57A8FF;
+  --app-gold: #D4A857;
+  --app-orange: #FF8A4C;
+  --app-green: #5FD98A;
+  --app-pink: #FF6FB5;
+  --app-white: #F4F1FB;
+  --app-muted: #8B87A3;
+  --app-muted-dim: #5F5C74;
+
+  --font-sans: "Inter", sans-serif;
+  --font-serif: "Fraunces", serif;
+  --font-mono: "IBM Plex Mono", monospace;
+
+  /* Basic shadcn values mapping */
+  --background: 250 30% 4%;
+  --foreground: 258 50% 96%;
+  --border: 250 30% 15%;
+  --card: 250 30% 7%;
+  --card-foreground: 258 50% 96%;
+  --card-border: 250 30% 15%;
+  --popover: 250 30% 4%;
+  --popover-foreground: 258 50% 96%;
+  --popover-border: 250 30% 15%;
+  --primary: 255 100% 74%;
+  --primary-foreground: 0 0% 0%;
+  --secondary: 250 30% 15%;
+  --secondary-foreground: 258 50% 96%;
+  --muted: 250 30% 15%;
+  --muted-foreground: 250 15% 60%;
+  --accent: 250 30% 15%;
+  --accent-foreground: 258 50% 96%;
+  --destructive: 0 100% 50%;
+  --destructive-foreground: 0 0% 100%;
+  --input: 250 30% 15%;
+  --ring: 255 100% 74%;
+  
+  --radius: 1rem;
+}
+
+.dark {
+  --background: 250 30% 4%;
+  --foreground: 258 50% 96%;
+  --border: 250 30% 15%;
+  --card: 250 30% 7%;
+  --card-foreground: 258 50% 96%;
+  --card-border: 250 30% 15%;
+  --popover: 250 30% 4%;
+  --popover-foreground: 258 50% 96%;
+  --popover-border: 250 30% 15%;
+  --primary: 255 100% 74%;
+  --primary-foreground: 0 0% 0%;
+  --secondary: 250 30% 15%;
+  --secondary-foreground: 258 50% 96%;
+  --muted: 250 30% 15%;
+  --muted-foreground: 250 15% 60%;
+  --accent: 250 30% 15%;
+  --accent-foreground: 258 50% 96%;
+  --destructive: 0 100% 50%;
+  --destructive-foreground: 0 0% 100%;
+  --input: 250 30% 15%;
+  --ring: 255 100% 74%;
+}
+
+@layer base {
+  * {
+    @apply border-border;
+  }
+
+  body {
+    @apply font-sans antialiased text-app-white bg-app-bg;
+    overflow-x: hidden;
+  }
+}
+
+.glass-panel {
+  background: var(--app-bg-glass);
+  border: 1px solid var(--app-line);
+  border-radius: 18px;
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+}
+
+.glass-panel-hover {
+  transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.glass-panel-hover:hover {
+  border-color: rgba(255,255,255,0.2);
+  transform: translateY(-3px);
+}
+
+@keyframes nebula-drift {
+  0% { transform: translate(0, 0) scale(1); }
+  50% { transform: translate(70px, -40px) scale(1.15); }
+  100% { transform: translate(-30px, 70px) scale(1); }
+}
+
+@keyframes nebula-drift-2 {
+  0% { transform: translate(0, 0) scale(1.1); }
+  50% { transform: translate(-80px, 50px) scale(1); }
+  100% { transform: translate(40px, -60px) scale(1.15); }
+}
+
+@keyframes nebula-drift-3 {
+  0% { transform: translate(0, 0) scale(1); }
+  50% { transform: translate(50px, 80px) scale(1.2); }
+  100% { transform: translate(-60px, -30px) scale(1); }
+}
+
+@keyframes star-twinkle {
+  0%, 100% { opacity: 0.3; }
+  50% { opacity: 0.65; }
+}
+
+@keyframes orbit {
+  from { transform: rotate(0deg); }
+  to { transform: rotate(360deg); }
+}
+
+.text-gradient {
+  background-clip: text;
+  -webkit-background-clip: text;
+  color: transparent;
+  background-image: linear-gradient(to right, #F4F1FB, #9B7BFF, #57A8FF);
+}
+
+
+/**
+ * Using the elevate system.
+ * Automatic contrast adjustment.
+ *
+ * <element className="hover-elevate" />
+ * <element className="active-elevate-2" />
+ *
+ * // Using the tailwind utility when a data attribute is "on"
+ * <element className="toggle-elevate data-[state=on]:toggle-elevated" />
+ * // Or manually controlling the toggle state
+ * <element className="toggle-elevate toggle-elevated" />
+ *
+ * Elevation systems have to handle many states.
+ * - not-hovered, vs. hovered vs. active  (three mutually exclusive states)
+ * - toggled or not
+ * - focused or not (this is not handled with these utilities)
+ *
+ * Even without handling focused or not, this is six possible combinations that
+ * need to be distinguished from eachother visually.
+ */
+@layer utilities {
+  /* Hide ugly search cancel button in Chrome until we can style it properly */
+  input[type='search']::-webkit-search-cancel-button {
+    @apply hidden;
+  }
+
+  /* Placeholder styling for contentEditable div */
+  [contenteditable][data-placeholder]:empty::before {
+    content: attr(data-placeholder);
+    color: hsl(var(--muted-foreground));
+    pointer-events: none;
+  }
+
+  /* .no-default-hover-elevate/no-default-active-elevate is an escape hatch so consumers of
+   * buttons/badges can remove the automatic brightness adjustment on interactions
+   * and program their own. */
+  .no-default-hover-elevate {
+  }
+
+  .no-default-active-elevate {
+  }
+
+  /**
+   * Toggleable backgrounds go behind the content. Hoverable/active goes on top.
+   * This way they can stack/compound. Both will overlap the parent's borders!
+   * So borders will be automatically adjusted both on toggle, and hover/active,
+   * and they will be compounded.
+   */
+  .toggle-elevate::before,
+  .toggle-elevate-2::before {
+    content: '';
+    pointer-events: none;
+    position: absolute;
+    inset: 0px;
+    /*border-radius: inherit;   match rounded corners */
+    border-radius: inherit;
+    z-index: -1;
+    /* sits behind content but above backdrop */
+  }
+
+  .toggle-elevate.toggle-elevated::before {
+    background-color: var(--elevate-2);
+  }
+
+  /* If there's a 1px border, adjust the inset so that it covers that parent's border */
+  .border.toggle-elevate::before {
+    inset: -1px;
+  }
+
+  /* Does not work on elements with overflow:hidden! */
+  .hover-elevate:not(.no-default-hover-elevate),
+  .active-elevate:not(.no-default-active-elevate),
+  .hover-elevate-2:not(.no-default-hover-elevate),
+  .active-elevate-2:not(.no-default-active-elevate) {
+    position: relative;
+    z-index: 0;
+  }
+
+  .hover-elevate:not(.no-default-hover-elevate)::after,
+  .active-elevate:not(.no-default-active-elevate)::after,
+  .hover-elevate-2:not(.no-default-hover-elevate)::after,
+  .active-elevate-2:not(.no-default-active-elevate)::after {
+    content: '';
+    pointer-events: none;
+    position: absolute;
+    inset: 0px;
+    /*border-radius: inherit;   match rounded corners */
+    border-radius: inherit;
+    z-index: 999;
+    /* sits in front of content */
+  }
+
+  .hover-elevate:hover:not(.no-default-hover-elevate)::after,
+  .active-elevate:active:not(.no-default-active-elevate)::after {
+    background-color: var(--elevate-1);
+  }
+
+  .hover-elevate-2:hover:not(.no-default-hover-elevate)::after,
+  .active-elevate-2:active:not(.no-default-active-elevate)::after {
+    background-color: var(--elevate-2);
+  }
+
+  /* If there's a 1px border, adjust the inset so that it covers that parent's border */
+  .border.hover-elevate:not(.no-hover-interaction-elevate)::after,
+  .border.active-elevate:not(.no-active-interaction-elevate)::after,
+  .border.hover-elevate-2:not(.no-hover-interaction-elevate)::after,
+  .border.active-elevate-2:not(.no-active-interaction-elevate)::after,
+  .border.hover-elevate:not(.no-hover-interaction-elevate)::after {
+    inset: -1px;
+  }
+}

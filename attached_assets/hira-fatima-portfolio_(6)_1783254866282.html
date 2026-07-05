@@ -1,0 +1,918 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Hira Fatima — Studio</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,300;0,9..144,400;0,9..144,500;0,9..144,600;1,9..144,500&family=Inter:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --bg:#08070D;
+    --bg-raised:#110D1C;
+    --bg-glass:rgba(255,255,255,0.035);
+    --line:rgba(255,255,255,0.09);
+    --purple:#9B7BFF;
+    --purple-dim:#4E3B99;
+    --blue:#57A8FF;
+    --gold:#D4A857;
+    --orange:#FF8A4C;
+    --green:#5FD98A;
+    --pink:#FF6FB5;
+    --white:#F4F1FB;
+    --muted:#8B87A3;
+    --muted-dim:#5F5C74;
+    --ease:cubic-bezier(.16,1,.3,1);
+    --accent:var(--purple);
+    --accent-rgb:155,123,255;
+  }
+  /* each world carries its own cosmic accent */
+  #world-lab{ --accent:var(--purple); --accent-rgb:155,123,255; }
+  #world-research{ --accent:var(--blue); --accent-rgb:87,168,255; }
+  #world-library{ --accent:var(--gold); --accent-rgb:212,168,87; }
+  #world-hall{ --accent:var(--orange); --accent-rgb:255,138,76; }
+  #world-about{ --accent:var(--green); --accent-rgb:95,217,138; }
+  #world-contact{ --accent:var(--pink); --accent-rgb:255,111,181; }
+  *{margin:0;padding:0;box-sizing:border-box;}
+  html,body{height:100%;}
+  body{
+    background:var(--bg);
+    color:var(--white);
+    font-family:'Inter',sans-serif;
+    overflow:hidden;
+    -webkit-font-smoothing:antialiased;
+  }
+  h1,h2,h3{font-family:'Fraunces',serif;letter-spacing:-0.01em;font-weight:500;}
+  a{color:inherit;text-decoration:none;}
+  .mono{font-family:'IBM Plex Mono',monospace;letter-spacing:.04em;}
+  ::selection{background:var(--purple-dim);color:#fff;}
+  ::-webkit-scrollbar{width:6px;}
+  ::-webkit-scrollbar-thumb{background:var(--purple-dim);border-radius:3px;}
+
+  #bg-canvas{position:fixed;inset:0;z-index:0;opacity:.55;}
+
+  .starfield{
+    position:fixed;inset:0;z-index:0;pointer-events:none;
+    background-repeat:no-repeat;
+    background-image:
+      radial-gradient(1.5px 1.5px at 20% 30%, #fff, transparent),
+      radial-gradient(1px 1px at 70% 65%, #fff, transparent),
+      radial-gradient(1.2px 1.2px at 45% 80%, #fff, transparent),
+      radial-gradient(1px 1px at 85% 15%, #fff, transparent),
+      radial-gradient(1.5px 1.5px at 10% 90%, #fff, transparent),
+      radial-gradient(1px 1px at 60% 10%, #fff, transparent),
+      radial-gradient(1.3px 1.3px at 30% 55%, #fff, transparent),
+      radial-gradient(1px 1px at 92% 45%, #fff, transparent),
+      radial-gradient(1.1px 1.1px at 55% 92%, #fff, transparent),
+      radial-gradient(1px 1px at 5% 55%, #fff, transparent);
+    opacity:.55;
+    animation:twinkle 6s ease-in-out infinite alternate;
+  }
+  @keyframes twinkle{from{opacity:.3;}to{opacity:.65;}}
+
+  .nebula{position:fixed;border-radius:50%;filter:blur(95px);z-index:0;pointer-events:none;
+    mix-blend-mode:screen;animation:drift 46s ease-in-out infinite alternate;}
+  .nebula-1{width:620px;height:620px;background:var(--purple);opacity:.30;top:-160px;left:-160px;}
+  .nebula-2{width:520px;height:520px;background:var(--blue);opacity:.22;bottom:-140px;right:-120px;animation-duration:58s;}
+  .nebula-3{width:440px;height:440px;background:var(--pink);opacity:.14;top:38%;left:58%;animation-duration:66s;}
+  @keyframes drift{from{transform:translate(0,0) scale(1);}to{transform:translate(70px,-50px) scale(1.15);}}
+  @media(prefers-reduced-motion:reduce){ .starfield,.nebula{animation:none;} }
+
+  /* ============ APP SHELL ============ */
+  #app{position:relative;width:100vw;height:100vh;z-index:1;}
+
+  /* ============ TOP BAR ============ */
+  .topbar{
+    position:fixed;top:24px;left:32px;right:32px;z-index:45;
+    display:flex;justify-content:space-between;align-items:center;
+    pointer-events:none;
+  }
+  .topbar .pill, .topbar .icon-btn{pointer-events:auto;}
+  .pill{
+    padding:11px 20px;border-radius:100px;border:1px solid var(--line);
+    background:rgba(17,13,28,.55);backdrop-filter:blur(14px);
+    font-size:12.5px;color:var(--white);cursor:pointer;
+    display:inline-flex;align-items:center;gap:8px;
+    transition:border-color .35s var(--ease), background .35s var(--ease), transform .35s var(--ease);
+  }
+  .pill:hover{border-color:var(--purple);transform:translateY(-1px);background:rgba(155,123,255,.1);}
+  .topbar-right{display:flex;gap:10px;align-items:center;}
+  .icon-btn{
+    width:40px;height:40px;border-radius:50%;border:1px solid var(--line);
+    background:rgba(17,13,28,.55);backdrop-filter:blur(14px);color:var(--white);
+    cursor:pointer;font-size:15px;display:flex;align-items:center;justify-content:center;
+    transition:border-color .35s var(--ease), transform .35s var(--ease);
+  }
+  .icon-btn:hover{border-color:var(--purple);transform:translateY(-1px);}
+  .menu-dropdown{
+    position:absolute;top:56px;right:0;min-width:190px;
+    background:rgba(17,13,28,.9);border:1px solid var(--line);border-radius:14px;
+    padding:8px;backdrop-filter:blur(16px);
+    opacity:0;pointer-events:none;transform:translateY(-8px);
+    transition:opacity .3s var(--ease), transform .3s var(--ease);
+  }
+  .menu-dropdown.open{opacity:1;pointer-events:auto;transform:translateY(0);}
+  .menu-dropdown a{
+    display:block;padding:10px 14px;border-radius:9px;font-size:13.5px;color:var(--muted);
+    transition:background .2s, color .2s;
+  }
+  .menu-dropdown a:hover{background:rgba(255,255,255,.05);color:var(--white);}
+
+  .signature{
+    position:fixed;bottom:26px;right:32px;z-index:25;font-size:12px;color:var(--muted-dim);
+    opacity:.8;pointer-events:none;
+  }
+  @media(max-width:640px){ .topbar{left:16px;right:16px;} .signature{display:none;} }
+
+  /* ============ MAP (signature nav) ============ */
+  .map-layer{
+    position:fixed;inset:0;z-index:20;
+    opacity:0;pointer-events:none;
+    transition:opacity .9s var(--ease);
+    overflow-y:auto;
+  }
+  .map-layer.active{opacity:1;pointer-events:auto;}
+  .map-layer svg{position:absolute;inset:0;width:100%;height:100%;}
+  .map-line{fill:none;stroke:url(#lineGrad);stroke-width:1;opacity:.4;
+    stroke-dasharray:6 400;stroke-dashoffset:0;animation:mapdraw 6s linear infinite;}
+  @keyframes mapdraw{to{stroke-dashoffset:-400;}}
+
+  .star{
+    position:absolute;transform:translate(-50%,-50%);
+    display:flex;align-items:center;gap:20px;
+  }
+  .star.lbl-left{flex-direction:row-reverse;}
+  .star.lbl-below{flex-direction:column;align-items:center;gap:10px;}
+
+  .planet-wrap{position:relative;width:82px;height:82px;flex-shrink:0;}
+  .planet-ring{
+    position:absolute;top:50%;left:50%;width:150%;height:56%;
+    transform:translate(-50%,-50%) rotate(-18deg);
+    border:1px solid rgba(var(--star-rgb,155,123,255),.35);border-radius:50%;
+    pointer-events:none;transition:border-color .4s var(--ease);
+  }
+  .planet-ring::after{
+    content:'';position:absolute;top:50%;left:2%;width:7px;height:7px;border-radius:50%;
+    background:var(--star-color,#9B7BFF);box-shadow:0 0 8px 2px var(--star-color,#9B7BFF);
+    transform:translateY(-50%);animation:orbit-dot 9s linear infinite;
+  }
+  @keyframes orbit-dot{ from{left:2%;} 50%{left:97%;} to{left:2%;} }
+
+  .planet{
+    position:absolute;inset:0;border-radius:50%;cursor:pointer;
+    background:
+      radial-gradient(circle at 32% 28%, rgba(255,255,255,.55), transparent 42%),
+      radial-gradient(circle at 65% 75%, rgba(0,0,0,.5), transparent 60%),
+      radial-gradient(circle at 50% 50%, var(--star-color,#9B7BFF), var(--bg-raised) 78%);
+    box-shadow:0 0 30px 6px rgba(var(--star-rgb,155,123,255),.25), inset 0 0 20px rgba(0,0,0,.4);
+    display:flex;align-items:center;justify-content:center;
+    transition:box-shadow .4s var(--ease), transform .4s var(--ease);
+  }
+  .planet svg{width:29px;height:29px;stroke:#fff;opacity:.92;position:relative;z-index:2;}
+  .star:hover .planet, .star.current .planet{
+    transform:scale(1.08);
+    box-shadow:0 0 46px 12px rgba(var(--star-rgb,155,123,255),.42), inset 0 0 20px rgba(0,0,0,.35);
+  }
+  .star:hover .planet-ring, .star.current .planet-ring{border-color:rgba(var(--star-rgb,155,123,255),.7);}
+
+  .planet-info{max-width:210px;}
+  .star.lbl-left .planet-info{text-align:right;}
+  .star.lbl-below .planet-info{text-align:center;}
+  .planet-info .num{font-family:'IBM Plex Mono',monospace;font-size:11px;color:var(--muted-dim);display:block;margin-bottom:4px;}
+  .planet-info h3{font-size:16.5px;line-height:1.15;color:var(--star-color,var(--white));margin-bottom:8px;letter-spacing:-0.01em;}
+  .planet-info p{font-size:12.5px;line-height:1.55;color:var(--muted);margin-bottom:10px;}
+  .planet-info a{
+    font-size:12px;font-family:'IBM Plex Mono',monospace;color:var(--star-color,var(--purple));
+    border-bottom:1px solid transparent;transition:border-color .3s;cursor:pointer;
+  }
+  .planet-info a:hover{border-color:currentColor;}
+
+  .map-center{
+    position:absolute;left:50%;top:50%;transform:translate(-50%,-50%);
+    text-align:center;pointer-events:none;
+  }
+  .map-center .eyebrow-sm{font-size:11.5px;text-transform:uppercase;letter-spacing:.24em;color:var(--muted);margin-bottom:10px;}
+  .map-center h1{
+    font-size:clamp(32px,5.4vw,60px);line-height:1;
+    background:linear-gradient(120deg,#fff, var(--purple) 60%, var(--blue));
+    -webkit-background-clip:text;background-clip:text;color:transparent;
+  }
+  .map-center .sub{max-width:320px;margin:12px auto 0;font-size:13.5px;color:var(--muted);line-height:1.5;
+    border-top:1px solid var(--line);padding-top:12px;}
+  .map-center .hint{margin-top:8px;font-size:12px;color:var(--muted-dim);}
+  @media(max-width:900px){
+    .planet-info{display:none;}
+    .planet-wrap{width:70px;height:70px;}
+    .planet svg{width:26px;height:26px;}
+  }
+
+  /* mobile map -> dock */
+  .dock{
+    position:fixed;left:50%;bottom:22px;transform:translateX(-50%);
+    z-index:35;display:none;gap:9px;padding:10px 14px;border-radius:100px;
+    background:rgba(17,13,28,.7);border:1px solid var(--line);backdrop-filter:blur(16px);
+  }
+  .dock .dot{width:8px;height:8px;border-radius:50%;background:var(--muted-dim);cursor:pointer;transition:all .3s var(--ease);}
+  .dock .dot.current{background:var(--purple);box-shadow:0 0 10px 2px rgba(155,123,255,.6);}
+
+  /* ============ WORLD PANELS ============ */
+  .world{
+    position:fixed;inset:0;z-index:10;overflow-y:auto;overflow-x:hidden;
+    opacity:0;pointer-events:none;transform:scale(1.03);filter:blur(14px);
+    transition:opacity .8s var(--ease), transform .8s var(--ease), filter .8s var(--ease);
+  }
+  .world.active{opacity:1;pointer-events:auto;transform:scale(1);filter:blur(0);}
+  .world-inner{max-width:980px;margin:0 auto;padding:120px 32px 160px;position:relative;z-index:2;}
+  .back-home{
+    position:fixed;top:28px;left:32px;z-index:30;font-size:12.5px;color:var(--muted);
+    display:flex;align-items:center;gap:8px;cursor:pointer;transition:color .3s;
+  }
+  .back-home:hover{color:var(--white);}
+  .back-home .ring{width:26px;height:26px;border-radius:50%;border:1px solid var(--line);
+    display:flex;align-items:center;justify-content:center;font-size:14px;}
+
+  .w-eyebrow{font-size:11.5px;text-transform:uppercase;letter-spacing:.18em;color:var(--accent);
+    display:flex;align-items:center;gap:10px;margin-bottom:20px;}
+  .w-eyebrow::before{content:'';width:20px;height:1px;background:var(--accent);}
+  .world h2{font-size:clamp(32px,5vw,54px);margin-bottom:18px;}
+  .w-intro{max-width:560px;color:var(--muted);font-size:16.5px;line-height:1.7;margin-bottom:64px;}
+
+  /* glass card */
+  .glass{
+    background:var(--bg-glass);border:1px solid var(--line);border-radius:18px;
+    backdrop-filter:blur(10px);transition:border-color .4s var(--ease), background .4s var(--ease), transform .4s var(--ease);
+  }
+
+  /* ---- WORLD 1: AI LAB ---- */
+  #world-lab .grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(300px,1fr));gap:16px;}
+  .proj-card{padding:26px;cursor:pointer;}
+  .proj-card:hover{border-color:var(--purple-dim);transform:translateY(-3px);}
+  .proj-card h3{font-size:19px;margin-bottom:8px;display:flex;justify-content:space-between;align-items:center;}
+  .proj-card h3 .chev{font-size:14px;color:var(--muted-dim);transition:transform .35s var(--ease);}
+  .proj-card.open h3 .chev{transform:rotate(90deg);color:var(--purple);}
+  .proj-card p.tagline{font-size:14px;color:var(--muted);margin-bottom:10px;}
+  .tags{display:flex;gap:7px;flex-wrap:wrap;margin-top:6px;}
+  .tag{font-size:10px;padding:4px 10px;border:1px solid var(--line);border-radius:20px;color:var(--muted);text-transform:uppercase;letter-spacing:.04em;}
+  .proj-detail{max-height:0;overflow:hidden;transition:max-height .5s var(--ease), margin .5s var(--ease);}
+  .proj-card.open .proj-detail{max-height:600px;margin-top:16px;}
+  .proj-detail .field{margin-bottom:12px;}
+  .proj-detail .field .k{font-size:10.5px;text-transform:uppercase;letter-spacing:.08em;color:var(--purple);margin-bottom:4px;}
+  .proj-detail .field .v{font-size:14px;color:var(--muted);line-height:1.55;}
+  .proj-links{display:flex;gap:18px;margin-top:14px;}
+  .proj-links a{font-size:13px;color:var(--blue);border-bottom:1px solid transparent;}
+  .proj-links a:hover{border-color:var(--blue);}
+
+  /* ---- WORLD 2: RESEARCH ---- */
+  #world-research .paper{padding:30px;margin-bottom:18px;}
+  .paper .meta{font-size:11.5px;color:var(--muted-dim);margin-bottom:10px;text-transform:uppercase;letter-spacing:.06em;}
+  .paper h3{font-size:20px;margin-bottom:10px;font-weight:600;}
+  .paper p{font-size:14.5px;color:var(--muted);line-height:1.65;}
+  .paper a{font-size:13.5px;color:var(--blue);display:inline-block;margin-top:12px;}
+  .graph-wrap{margin-top:60px;}
+  .graph-wrap h3{font-size:16px;margin-bottom:6px;color:var(--white);}
+  .graph-wrap p{font-size:13.5px;color:var(--muted-dim);margin-bottom:24px;}
+
+  /* ---- WORLD 3: LIBRARY ---- */
+  #world-library{background:radial-gradient(ellipse at 20% 0%, rgba(155,123,255,.07), transparent 55%);}
+  .shelf{display:grid;grid-template-columns:1.1fr .9fr;gap:56px;}
+  @media(max-width:760px){.shelf{grid-template-columns:1fr;}}
+  .shelf h3{font-size:20px;font-style:italic;margin-bottom:20px;color:var(--white);}
+  .poem-list{list-style:none;}
+  .poem-list li{padding:13px 0;border-top:1px solid var(--line);display:flex;justify-content:space-between;gap:14px;font-size:14.5px;}
+  .poem-list li .place{font-family:'IBM Plex Mono',monospace;font-size:11.5px;color:var(--accent);white-space:nowrap;}
+  .quote-block{margin-top:26px;padding:22px 24px;border-left:2px solid var(--accent);font-style:italic;color:var(--muted);font-size:15px;line-height:1.7;}
+  .rank-badges{display:flex;gap:8px;flex-wrap:wrap;margin-top:14px;}
+  .rank-badge{font-size:10.5px;padding:5px 11px;border-radius:8px;
+    border:1px solid rgba(var(--accent-rgb),.35);color:var(--accent);
+    background:rgba(var(--accent-rgb),.08);font-family:'IBM Plex Mono',monospace;letter-spacing:.02em;}
+  .novel-box{margin-top:20px;padding:22px;}
+  .novel-box .title{font-style:italic;font-size:18px;margin-bottom:8px;color:var(--white);}
+  .novel-box p{font-size:14px;color:var(--muted);line-height:1.6;}
+  .philosophy{margin-top:26px;font-size:14.5px;color:var(--muted);line-height:1.75;}
+
+  /* ---- WORLD 4: ACHIEVEMENT HALL ---- */
+  .timeline{position:relative;padding-left:34px;}
+  .timeline::before{content:'';position:absolute;left:6px;top:6px;bottom:6px;width:1px;background:var(--line);}
+  .t-item{position:relative;padding-bottom:38px;}
+  .t-item::before{content:'';position:absolute;left:-34px;top:5px;width:9px;height:9px;border-radius:50%;
+    background:var(--bg);border:1.5px solid var(--accent);box-shadow:0 0 10px 1px rgba(var(--accent-rgb),.4);}
+  .t-item .yr{font-family:'IBM Plex Mono',monospace;font-size:11.5px;color:var(--accent);margin-bottom:6px;}
+  .t-item h3{font-size:17px;margin-bottom:6px;font-weight:600;}
+  .t-item p{font-size:14px;color:var(--muted);line-height:1.6;}
+
+  /* ---- WORLD 5: ABOUT ---- */
+  .identity-row{display:flex;gap:12px;flex-wrap:wrap;margin-bottom:44px;}
+  .id-chip{padding:8px 16px;border-radius:100px;border:1px solid var(--line);font-size:12.5px;color:var(--muted);}
+  .about-body p{font-size:16px;line-height:1.85;color:var(--muted);max-width:620px;margin-bottom:20px;}
+  .about-body strong{color:var(--white);font-weight:600;}
+
+  /* ---- WORLD 6: CONTACT ---- */
+  #world-contact .contact-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:1px;background:var(--line);border:1px solid var(--line);border-radius:16px;overflow:hidden;}
+  .contact-link{padding:26px;background:var(--bg);display:flex;flex-direction:column;gap:8px;transition:background .3s;}
+  .contact-link:hover{background:rgba(var(--accent-rgb),.06);}
+  .contact-link .k{font-size:11px;text-transform:uppercase;letter-spacing:.08em;color:var(--accent);}
+  .contact-link .v{font-size:15.5px;color:var(--white);}
+  .contact-link .v::after{content:' →';color:var(--muted-dim);}
+
+  @media(max-width:640px){
+    .world-inner{padding:100px 22px 120px;}
+    .map-layer{display:none;}
+    .dock{display:flex;}
+  }
+
+  /* ============ LANDING (first layer) ============ */
+  .landing{
+    position:fixed;inset:0;z-index:50;
+    display:flex;flex-direction:column;align-items:center;justify-content:center;
+    text-align:center;gap:26px;
+    background:radial-gradient(ellipse at 50% 30%, rgba(155,123,255,0.12), transparent 60%), var(--bg);
+    transition:opacity 1s var(--ease), filter 1s var(--ease), transform 1s var(--ease);
+  }
+  .landing.leaving{opacity:0;filter:blur(20px);transform:scale(1.06);pointer-events:none;}
+  .landing .eyebrow{
+    font-size:11.5px;text-transform:uppercase;letter-spacing:.22em;color:var(--muted);
+    opacity:0;animation:landing-rise .9s var(--ease) .2s forwards;
+  }
+  .landing h1{
+    font-size:clamp(44px,9vw,104px);line-height:.98;
+    background:linear-gradient(120deg,#fff, var(--purple) 60%, var(--blue));
+    -webkit-background-clip:text;background-clip:text;color:transparent;
+    opacity:0;animation:landing-rise 1s var(--ease) .38s forwards;
+  }
+  .landing p{
+    max-width:480px;color:var(--muted);font-size:16px;line-height:1.6;
+    opacity:0;animation:landing-rise 1s var(--ease) .62s forwards;
+  }
+  .landing p em{color:var(--white);font-style:italic;}
+  @keyframes landing-rise{from{opacity:0;transform:translateY(16px);}to{opacity:1;transform:translateY(0);}}
+
+  .enter-btn{
+    margin-top:14px;padding:15px 34px;border-radius:100px;
+    border:1px solid var(--line);background:var(--bg-glass);
+    font-family:'IBM Plex Mono',monospace;font-size:12.5px;letter-spacing:.1em;text-transform:uppercase;
+    color:var(--white);cursor:pointer;backdrop-filter:blur(12px);
+    display:flex;align-items:center;gap:12px;
+    opacity:0;animation:landing-rise 1s var(--ease) .9s forwards;
+    transition:border-color .4s var(--ease), background .4s var(--ease), transform .4s var(--ease), box-shadow .4s var(--ease);
+  }
+  .enter-btn:hover{
+    border-color:var(--purple); transform:translateY(-2px);
+    box-shadow:0 8px 32px rgba(155,123,255,.25);
+    background:rgba(155,123,255,.08);
+  }
+  .enter-btn .dot{width:6px;height:6px;border-radius:50%;background:var(--purple);
+    box-shadow:0 0 10px 2px var(--purple);animation:enter-pulse 2s ease-in-out infinite;}
+  @keyframes enter-pulse{0%,100%{opacity:.5;}50%{opacity:1;}}
+
+  /* hub elements stay hidden until the visitor enters */
+  #app.pre-entry .topbar, #app.pre-entry .signature{opacity:0;pointer-events:none;}
+  .topbar, .signature{transition:opacity .8s var(--ease) .2s;}
+</style>
+</head>
+<body>
+
+<div class="starfield"></div>
+<div class="nebula nebula-1"></div>
+<div class="nebula nebula-2"></div>
+<div class="nebula nebula-3"></div>
+<canvas id="bg-canvas"></canvas>
+
+<div id="app" class="pre-entry">
+
+  <!-- LANDING (first layer) -->
+  <div class="landing" id="landing">
+    <div class="eyebrow">Computer Engineering &amp; Poetry</div>
+    <h1>Hira Fatima</h1>
+    <p>A studio where <em>explainable AI systems</em> and <em>unexplainable feelings</em> get built out of the same instinct. Six worlds. One person.</p>
+    <button class="enter-btn" id="enterBtn"><span class="dot"></span> Enter my studio</button>
+  </div>
+
+  <!-- TOP BAR -->
+  <div class="topbar">
+    <button class="pill" id="exploreBtn">✦ Explore Universe</button>
+    <div class="topbar-right">
+      <button class="pill" id="ambientBtn">♪ Ambient: On</button>
+      <button class="icon-btn" id="menuBtn">☰</button>
+      <div class="menu-dropdown" id="menuDropdown"></div>
+    </div>
+  </div>
+
+  <!-- MAP / HUB -->
+  <div class="map-layer" id="map">
+    <svg viewBox="0 0 1000 1000" preserveAspectRatio="xMidYMid meet">
+      <defs>
+        <linearGradient id="lineGrad" x1="0" y1="0" x2="1" y2="1">
+          <stop offset="0%" stop-color="#9B7BFF"/>
+          <stop offset="100%" stop-color="#57A8FF"/>
+        </linearGradient>
+      </defs>
+      <g id="mapLines"></g>
+    </svg>
+    <div class="map-center">
+      <div class="eyebrow-sm">Welcome to</div>
+      <h1>Hira Fatima</h1>
+      <p class="sub">a constellation of ideas, research, stories and code.</p>
+      <p class="hint">Click on any world to explore <span class="cursor-ico">🖱</span></p>
+    </div>
+    <div id="mapStars"></div>
+  </div>
+
+  <div class="signature">Made with passion &amp; curiosity 💜</div>
+
+  <!-- DOCK (mobile) -->
+  <div class="dock" id="dock"></div>
+
+  <!-- BACK HOME -->
+  <div class="back-home" id="backHome" style="display:none;">
+    <span class="ring">←</span> studio map
+  </div>
+
+  <!-- WORLD 1 — AI LAB -->
+  <section class="world" id="world-lab">
+    <div class="world-inner">
+      <div class="w-eyebrow">World 01 — AI Lab</div>
+      <h2>Systems that reason about people</h2>
+      <p class="w-intro">Six shipped projects, mostly built around one question: can software respond to a person's emotional state with something more honest than a canned reply? Click any project to open it up.</p>
+      <div class="grid" id="labGrid"></div>
+    </div>
+  </section>
+
+  <!-- WORLD 2 — RESEARCH LAB -->
+  <section class="world" id="world-research">
+    <div class="world-inner">
+      <div class="w-eyebrow">World 02 — Research Lab</div>
+      <h2>Reading my way into hardware</h2>
+      <p class="w-intro">Independent literature reviews on the physical substrates AI might run on next — after spending enough time on the software side to want to understand what's underneath it.</p>
+      <div id="papers"></div>
+      <div class="graph-wrap">
+        <h3>Where the reading connects</h3>
+        <p>A rough map of the ideas these papers sit between.</p>
+        <svg viewBox="0 0 700 300" width="100%" style="max-width:700px;">
+          <g id="knowledgeGraph"></g>
+        </svg>
+      </div>
+    </div>
+  </section>
+
+  <!-- WORLD 3 — WRITER'S LIBRARY -->
+  <section class="world" id="world-library">
+    <div class="world-inner">
+      <div class="w-eyebrow">World 03 — Writer's Library</div>
+      <h2>The other half of the work</h2>
+      <p class="w-intro">Poetry and fiction, written in the hours code doesn't need me. Same questions — identity, resilience, what a person is made of — approached from the opposite direction.</p>
+      <div class="shelf">
+        <div>
+          <h3>Poetry</h3>
+          <ul class="poem-list" id="poemList"></ul>
+          <div class="quote-block">"I write to reason with feeling the way I code to reason with data — neither one works without the other."</div>
+        </div>
+        <div>
+          <h3>Fiction</h3>
+          <p style="font-size:14.5px;color:var(--muted);line-height:1.65;">Serialized fiction on Wattpad and WebNovel — psychological, technology-adjacent stories about people at the edge of themselves.</p>
+          <div class="glass novel-box">
+            <div class="title">Firewalls and Flowers</div>
+            <p>Featured novel — a story living where technology and feeling meet, which is where most of my writing lives.</p>
+            <div class="rank-badges">
+              <span class="rank-badge">Top #21 · Feminist Fiction</span>
+              <span class="rank-badge">Top #112 · Cyberbullying</span>
+              <span class="rank-badge">Top #683 · Feminism</span>
+            </div>
+          </div>
+          <div class="glass novel-box">
+            <div class="title">When Fate Forgot My Name</div>
+            <p>A novel about identity, legacy, and rewriting the story you were handed instead of the one you were told to accept.</p>
+          </div>
+          <div class="philosophy">Writing philosophy: build the feeling first, let the plot or the argument follow it — never the other way round.</div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- WORLD 4 — ACHIEVEMENT HALL -->
+  <section class="world" id="world-hall">
+    <div class="world-inner">
+      <div class="w-eyebrow">World 04 — Achievement Hall</div>
+      <h2>A timeline, not a trophy case</h2>
+      <p class="w-intro">The record so far — engineering and writing side by side, because they happened side by side.</p>
+      <div class="timeline" id="timeline"></div>
+    </div>
+  </section>
+
+  <!-- WORLD 5 — ABOUT -->
+  <section class="world" id="world-about">
+    <div class="world-inner">
+      <div class="w-eyebrow">World 05 — About Hira</div>
+      <h2>Two ways of asking the same question</h2>
+      <div class="identity-row">
+        <span class="id-chip">Engineer</span>
+        <span class="id-chip">AI Researcher</span>
+        <span class="id-chip">Poet</span>
+        <span class="id-chip">Novelist</span>
+        <span class="id-chip">Human-centered thinker</span>
+      </div>
+      <div class="about-body">
+        <p>I'm a final-year Computer Engineering diploma student at Women's Polytechnic, Aligarh Muslim University, holding a <strong>9.42 CPI</strong>. Most of my technical work sits at the intersection of <strong>affective computing, neuromorphic engineering, and human-computer interaction</strong> — I'm interested in AI that doesn't just classify what someone feels, but reasons about why.</p>
+        <p>Outside the lab, I write — poetry that's placed in 30+ international contests, and serialized fiction that's found its own small readership on Wattpad and WebNovel. I don't experience these as two separate people. The same instinct that makes me want to know <em>why</em> a model made a decision is the instinct that makes me want to know <em>why</em> a character does what they do.</p>
+        <p>Mission: build systems that treat people as more than data points, and write things that treat feelings as more than noise. Different tools, same commitment.</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- WORLD 6 — CONTACT -->
+  <section class="world" id="world-contact">
+    <div class="world-inner">
+      <div class="w-eyebrow">World 06 — Contact</div>
+      <h2>If any of this made you want to talk</h2>
+      <p class="w-intro">— I'd like that. Every open door, below.</p>
+      <div class="contact-grid" id="contactGrid"></div>
+    </div>
+  </section>
+
+</div>
+
+<script>
+/* ============ DATA ============ */
+const worldIcons = {
+  'world-lab': '<circle cx="7" cy="8" r="2.4" fill="none" stroke-width="1.6"/><circle cx="17" cy="8" r="2.4" fill="none" stroke-width="1.6"/><circle cx="12" cy="18" r="2.4" fill="none" stroke-width="1.6"/><path d="M9 9.5L12 15.5M15 9.5L12 15.5M9.3 7.5H14.7" stroke-width="1.4" fill="none"/>',
+  'world-research': '<circle cx="12" cy="12" r="3" fill="none" stroke-width="1.6"/><ellipse cx="12" cy="12" rx="9" ry="3.6" fill="none" stroke-width="1.3" transform="rotate(20 12 12)"/><ellipse cx="12" cy="12" rx="9" ry="3.6" fill="none" stroke-width="1.3" transform="rotate(-20 12 12)"/>',
+  'world-library': '<path d="M4 5.5C4 5.5 7 4.3 12 5.5V19C7 17.8 4 19 4 19V5.5Z" fill="none" stroke-width="1.4" stroke-linejoin="round"/><path d="M20 5.5C20 5.5 17 4.3 12 5.5V19C17 17.8 20 19 20 19V5.5Z" fill="none" stroke-width="1.4" stroke-linejoin="round"/>',
+  'world-hall': '<path d="M7 4H17V9C17 12 14.7 14 12 14C9.3 14 7 12 7 9V4Z" fill="none" stroke-width="1.5" stroke-linejoin="round"/><path d="M7 5H4.5C4.5 8 6 9.5 7 9.8M17 5H19.5C19.5 8 18 9.5 17 9.8" fill="none" stroke-width="1.3"/><path d="M12 14V18M9 20H15M9.5 18H14.5" fill="none" stroke-width="1.4" stroke-linecap="round"/>',
+  'world-about': '<circle cx="12" cy="7.5" r="3" fill="none" stroke-width="1.6"/><path d="M6.5 20C6.5 15.8 8.9 13 12 13C15.1 13 17.5 15.8 17.5 20" fill="none" stroke-width="1.6" stroke-linecap="round"/>',
+  'world-contact': '<rect x="4" y="6" width="16" height="12" rx="2" fill="none" stroke-width="1.5"/><path d="M4.5 7L12 13L19.5 7" fill="none" stroke-width="1.5" stroke-linejoin="round"/>'
+};
+
+const worlds = [
+  {id:'world-lab', label:'AI Laboratory', color:'#9B7BFF', rgb:'155,123,255', blurb:'AI projects, models and experiments that turn ideas into intelligent experiences.', cta:'Enter Laboratory'},
+  {id:'world-research', label:'Research Observatory', color:'#57A8FF', rgb:'87,168,255', blurb:'Research papers, publications and ideas that shape the future.', cta:'Enter Observatory'},
+  {id:'world-library', label:"Writer's Library", color:'#D4A857', rgb:'212,168,87', blurb:'Poetry, novels and words that reflect dreams, emotions and imagination.', cta:'Enter Library'},
+  {id:'world-hall', label:'Hall of Milestones', color:'#FF8A4C', rgb:'255,138,76', blurb:'Achievements, hackathons, certificates and milestones that mark the journey so far.', cta:'Enter Hall'},
+  {id:'world-about', label:'The Story of Hira', color:'#5FD98A', rgb:'95,217,138', blurb:'My journey, growth, learnings and the person behind the code.', cta:'Explore Story'},
+  {id:'world-contact', label:'Communication Hub', color:'#FF6FB5', rgb:'255,111,181', blurb:"Let's connect, collaborate and build something meaningful together.", cta:'Open Hub'}
+];
+
+const projects = [
+  {
+    name:'ERA — Emotion Reasoning AI',
+    tagline:'An affective computing prototype that reasons toward an explainable response instead of just classifying sentiment.',
+    tags:['Python','Streamlit','Affective Computing'],
+    problem:'Most sentiment tools output a label (positive/negative) with no reasoning attached, which makes them useless for anything that needs to explain itself.',
+    solution:'ERA detects the underlying emotion, analyzes the context around it, and reasons toward a response — showing its working, not just its verdict.',
+    lessons:'Explainability is a design constraint, not a bolt-on feature — it has to shape the pipeline from the first step.',
+    demo:'https://era-emotion-reasoning-bacxh8g5xml4nqlmmwwe8j.streamlit.app/',
+    github:'https://github.com/itselodie/era-emotion-reasoning'
+  },
+  {
+    name:'PathERA',
+    tagline:'USAII® Global AI Hackathon 2026 Finalist — an emotion-aware decision intelligence assistant.',
+    tags:['Python','Streamlit','Decision Intelligence'],
+    problem:'Decision-support tools tend to give generic advice that ignores the emotional stakes actually driving a hard choice.',
+    solution:'PathERA surfaces the hidden emotional drivers behind a decision and simulates tradeoffs before recommending a path forward.',
+    lessons:'A recommendation only feels trustworthy once the person can see the tradeoff, not just the conclusion.',
+    demo:'https://pathera-kdupfsqopuubmttvqfhmu2.streamlit.app/',
+    github:'https://github.com/itselodie/PathERA'
+  },
+  {
+    name:'Decode Her Silence',
+    tagline:'A trauma-informed, privacy-first chatbot supporting people facing gender-based violence.',
+    tags:['HTML/CSS/JS','Social Impact'],
+    problem:'People in unsafe situations often need information and support without leaving a visible digital trace.',
+    solution:'A chatbot offering emotional support, legal information, and safety resources, designed with privacy and discretion as first principles.',
+    lessons:'For sensitive tools, restraint in the interface is itself a safety feature.',
+    demo:'https://itselodie.github.io/Decode-Her-Silence-/',
+    github:'https://github.com/itselodie/Decode-Her-Silence-'
+  },
+  {
+    name:'AlgoCraft',
+    tagline:'Turning abstract data structures into real-time, hands-on visual animations.',
+    tags:['JavaScript','Education'],
+    problem:'Arrays, stacks, and queues are usually taught as static diagrams, which makes the underlying motion hard to build intuition for.',
+    solution:'An interactive platform that animates each structure in real time as operations run against it.',
+    lessons:'Watching a structure move teaches faster than reading about it ever does.',
+    demo:'https://algocraft-ten.vercel.app/',
+    github:'https://github.com/itselodie/algocraft'
+  },
+  {
+    name:'Gaming Website',
+    tagline:'A browser-based multi-game platform — Connect Four, memory, and puzzle games.',
+    tags:['HTML/CSS/JS'],
+    problem:'Wanted a lightweight, no-dependency way to practice frontend game-loop logic.',
+    solution:'A small suite of classic games built with a responsive, frontend-first architecture.',
+    lessons:'Small self-contained games are a good sandbox for state-management patterns before using them on bigger projects.',
+    demo:'https://itselodie.github.io/gaming-website/',
+    github:'https://github.com/itselodie/gaming-website'
+  },
+  {
+    name:'Chess Game',
+    tagline:'A fully functional two-player desktop chess app with a complete GUI.',
+    tags:['Java Swing','Desktop'],
+    problem:'Wanted to implement full chess rules and turn logic without a game engine to lean on.',
+    solution:'A Java Swing desktop application handling legal move validation, turns, and a full graphical board.',
+    lessons:'Game rules that feel simple as a player get surprisingly intricate the moment you have to encode every edge case.',
+    demo:null,
+    github:'https://github.com/itselodie/chess-game'
+  }
+];
+
+const papers = [
+  {
+    meta:'Published · June 2025 · Zenodo',
+    title:'Neuromorphic Computing: A Theoretical Review of Synaptic Connections and Devices',
+    abstract:'A review of spike-based neural architectures and the synaptic devices that let neuromorphic chips process information differently from conventional binary systems.',
+    doi:'10.5281/zenodo.20529279',
+    url:'https://doi.org/10.5281/zenodo.20529279'
+  },
+  {
+    meta:'Preprint · July 2026 · Zenodo',
+    title:'Photonic Computing for AI Acceleration: Architectures, Opportunities, Challenges, and Future Perspectives',
+    abstract:'A theoretical review of light-based information processing as a path around the bandwidth, latency, and energy limits of conventional electronic architectures.',
+    doi:'10.5281/zenodo.21191735',
+    url:'https://doi.org/10.5281/zenodo.21191735'
+  }
+];
+
+const poems = [
+  {name:'Jukebox Requiem', place:'1st place'},
+  {name:'Born to Rise', place:'1st place'},
+  {name:'Light', place:'1st place'},
+  {name:'What the Silence Hid', place:'2nd place'},
+  {name:'Is a Mirror Just a Mirror', place:'4th place'},
+  {name:'What Blooms After Burning', place:'9th place'}
+];
+
+const timelineItems = [
+  {yr:'2026', title:'USAII® Global AI Hackathon — Finalist', desc:'Reached the Finals (Undergraduate Level) with PathERA, an emotion-aware decision intelligence assistant.'},
+  {yr:'2026', title:'Photonic Computing preprint published', desc:'Independent theoretical review released on Zenodo, July 2026.'},
+  {yr:'2025', title:'Neuromorphic Computing paper published', desc:'Independent literature review on synaptic devices and spike-based architectures, released on Zenodo.'},
+  {yr:'2025', title:'Build to Simplify Hackathon — Participant', desc:'Competed in the Simplify AI Tools track.'},
+  {yr:'2024 – Ongoing', title:'30+ poetry contest placements', desc:'Multiple 1st-place wins on PoetrySoup, including Jukebox Requiem, Born to Rise, and Light.'},
+  {yr:'2025', title:'Anthology contributor', desc:'Featured in Diverse Voices: The Poetry of Human Rights and the Pursuit of Peace, alongside poets from 41 countries.'},
+  {yr:'2025 – Ongoing', title:'Serialized novelist', desc:'Firewalls and Flowers and When Fate Forgot My Name, published across Wattpad and WebNovel.'}
+];
+
+const contacts = [
+  {k:'Email', v:'itshirafatima12@gmail.com', href:'mailto:itshirafatima12@gmail.com'},
+  {k:'GitHub', v:'github.com/itselodie', href:'https://github.com/itselodie'},
+  {k:'LinkedIn', v:'linkedin.com/in/itshirafatima', href:'https://www.linkedin.com/in/itshirafatima/'},
+  {k:'Devpost', v:'devpost.com/itshirafatima12', href:'https://devpost.com/itshirafatima12'},
+  {k:'HackerRank', v:'hackerrank.com/itshirafatima12', href:'https://www.hackerrank.com/profile/itshirafatima12'},
+  {k:'PoetrySoup', v:'poems by itselodie', href:'https://www.poetrysoup.com/poems_poets/poems_by_poet.aspx?ID=187177'},
+  {k:'Wattpad', v:'wattpad.com/user/itselodie1', href:'https://www.wattpad.com/user/itselodie1'},
+  {k:'WebNovel', v:'webnovel.com/profile/4506418755', href:'https://www.webnovel.com/profile/4506418755'},
+  {k:'Instagram', v:'@_itz_hiraa', href:'https://instagram.com/_itz_hiraa'}
+];
+
+/* ============ RENDER ============ */
+const labGrid = document.getElementById('labGrid');
+projects.forEach((p,i)=>{
+  const card = document.createElement('div');
+  card.className='glass proj-card';
+  card.innerHTML = `
+    <h3>${p.name} <span class="chev">›</span></h3>
+    <p class="tagline">${p.tagline}</p>
+    <div class="tags">${p.tags.map(t=>`<span class="tag">${t}</span>`).join('')}</div>
+    <div class="proj-detail">
+      <div class="field"><div class="k">Problem</div><div class="v">${p.problem}</div></div>
+      <div class="field"><div class="k">Solution</div><div class="v">${p.solution}</div></div>
+      <div class="field"><div class="k">Lesson learned</div><div class="v">${p.lessons}</div></div>
+      <div class="proj-links">
+        ${p.demo?`<a href="${p.demo}" target="_blank" rel="noopener">Live demo →</a>`:''}
+        <a href="${p.github}" target="_blank" rel="noopener">GitHub →</a>
+      </div>
+    </div>`;
+  card.addEventListener('click', (e)=>{
+    if(e.target.tagName==='A') return;
+    card.classList.toggle('open');
+  });
+  labGrid.appendChild(card);
+});
+
+const papersEl = document.getElementById('papers');
+papers.forEach(p=>{
+  const el = document.createElement('div');
+  el.className='glass paper';
+  el.innerHTML = `
+    <div class="meta">${p.meta}</div>
+    <h3>${p.title}</h3>
+    <p>${p.abstract}</p>
+    <a href="${p.url}" target="_blank" rel="noopener">DOI: ${p.doi} →</a>`;
+  papersEl.appendChild(el);
+});
+
+const poemList = document.getElementById('poemList');
+poems.forEach(p=>{
+  const li = document.createElement('li');
+  li.innerHTML = `<span>${p.name}</span><span class="place">${p.place}</span>`;
+  poemList.appendChild(li);
+});
+
+const timelineEl = document.getElementById('timeline');
+timelineItems.forEach(t=>{
+  const el = document.createElement('div');
+  el.className='t-item';
+  el.innerHTML = `<div class="yr">${t.yr}</div><h3>${t.title}</h3><p>${t.desc}</p>`;
+  timelineEl.appendChild(el);
+});
+
+const contactGrid = document.getElementById('contactGrid');
+contacts.forEach(c=>{
+  const a = document.createElement('a');
+  a.className='contact-link';
+  a.href=c.href; a.target='_blank'; a.rel='noopener';
+  a.innerHTML = `<div class="k">${c.k}</div><div class="v">${c.v}</div>`;
+  contactGrid.appendChild(a);
+});
+
+/* knowledge graph (world 2) */
+(function(){
+  const svg = document.getElementById('knowledgeGraph');
+  const nodes = [
+    {x:110,y:60,label:'Affective\nComputing'},
+    {x:350,y:40,label:'Neuromorphic\nDevices'},
+    {x:580,y:80,label:'Photonic\nComputing'},
+    {x:230,y:220,label:'Explainability'},
+    {x:470,y:230,label:'HCI'}
+  ];
+  const edges = [[0,1],[1,2],[0,3],[3,4],[4,2],[0,4]];
+  let svgStr = '';
+  edges.forEach(([a,b])=>{
+    const n1=nodes[a], n2=nodes[b];
+    svgStr += `<line x1="${n1.x}" y1="${n1.y}" x2="${n2.x}" y2="${n2.y}" stroke="#57A8FF" stroke-opacity="0.28" stroke-width="1"/>`;
+  });
+  nodes.forEach(n=>{
+    svgStr += `<circle cx="${n.x}" cy="${n.y}" r="5" fill="#57A8FF"/>`;
+    n.label.split('\n').forEach((line,i)=>{
+      svgStr += `<text x="${n.x}" y="${n.y+22+i*14}" text-anchor="middle" fill="#8B87A3" font-size="11" font-family="IBM Plex Mono">${line}</text>`;
+    });
+  });
+  svg.innerHTML = svgStr;
+})();
+
+/* ============ MAP NAV ============ */
+const mapStars = document.getElementById('mapStars');
+const mapLines = document.getElementById('mapLines');
+const dock = document.getElementById('dock');
+
+// hand-placed constellation coordinates (percent of viewBox 1000x1000, mapped to viewport later via CSS %)
+const starPos = [
+  {x:22, y:23}, {x:50, y:10}, {x:78, y:23},
+  {x:22, y:71}, {x:50, y:90}, {x:78, y:71}
+];
+
+const labelSide = ['lbl-left','lbl-right','lbl-right','lbl-left','lbl-below','lbl-right'];
+
+worlds.forEach((w, i)=>{
+  const s = document.createElement('div');
+  s.className = 'star ' + labelSide[i];
+  s.style.left = starPos[i].x + '%';
+  s.style.top = starPos[i].y + '%';
+  s.style.setProperty('--star-color', w.color);
+  s.style.setProperty('--star-rgb', w.rgb);
+  s.dataset.target = w.id;
+  s.innerHTML = `
+    <div class="planet-wrap">
+      <div class="planet-ring"></div>
+      <div class="planet"><svg viewBox="0 0 24 24" fill="none">${worldIcons[w.id]}</svg></div>
+    </div>
+    <div class="planet-info">
+      <span class="num">0${i+1}</span>
+      <h3>${w.label}</h3>
+      <p>${w.blurb}</p>
+      <a data-target="${w.id}">${w.cta} →</a>
+    </div>`;
+  s.querySelector('.planet').addEventListener('click', ()=>enterWorld(w.id));
+  s.querySelector('.planet-info a').addEventListener('click', ()=>enterWorld(w.id));
+  mapStars.appendChild(s);
+
+  const d = document.createElement('div');
+  d.className='dot';
+  d.dataset.target = w.id;
+  d.addEventListener('click', ()=>enterWorld(w.id));
+  dock.appendChild(d);
+});
+
+// draw connecting lines between all star pairs faintly
+let lineSvg = '';
+for(let i=0;i<starPos.length;i++){
+  for(let j=i+1;j<starPos.length;j++){
+    const a=starPos[i], b=starPos[j];
+    lineSvg += `<line class="map-line" x1="${a.x*10}" y1="${a.y*10}" x2="${b.x*10}" y2="${b.y*10}"/>`;
+  }
+}
+mapLines.innerHTML = lineSvg;
+
+/* ============ STATE / TRANSITIONS ============ */
+const map = document.getElementById('map');
+const backHome = document.getElementById('backHome');
+const landing = document.getElementById('landing');
+const appEl = document.getElementById('app');
+let current = null;
+
+document.getElementById('enterBtn').addEventListener('click', ()=>{
+  landing.classList.add('leaving');
+  appEl.classList.remove('pre-entry');
+  setTimeout(()=>{ landing.style.display='none'; showMap(); }, 950);
+});
+
+function showMap(){
+  current = null;
+  map.classList.add('active');
+  backHome.style.display='none';
+  worlds.forEach(w=>document.getElementById(w.id).classList.remove('active'));
+  document.querySelectorAll('.star, .dock .dot').forEach(n=>n.classList.remove('current'));
+  document.getElementById('menuDropdown').classList.remove('open');
+}
+
+function enterWorld(id){
+  current = id;
+  map.classList.remove('active');
+  worlds.forEach(w=>document.getElementById(w.id).classList.toggle('active', w.id===id));
+  document.querySelectorAll('.star, .dock .dot').forEach(n=>{
+    n.classList.toggle('current', n.dataset.target===id);
+  });
+  backHome.style.display='flex';
+  document.getElementById(id).scrollTop = 0;
+  document.getElementById('menuDropdown').classList.remove('open');
+}
+
+backHome.addEventListener('click', showMap);
+document.getElementById('exploreBtn').addEventListener('click', showMap);
+
+/* menu dropdown */
+const menuDropdown = document.getElementById('menuDropdown');
+menuDropdown.innerHTML = worlds.map(w=>`<a data-target="${w.id}">${w.label}</a>`).join('');
+menuDropdown.querySelectorAll('a').forEach(a=>{
+  a.addEventListener('click', ()=>enterWorld(a.dataset.target));
+});
+document.getElementById('menuBtn').addEventListener('click', (e)=>{
+  e.stopPropagation();
+  menuDropdown.classList.toggle('open');
+});
+document.addEventListener('click', ()=> menuDropdown.classList.remove('open'));
+
+/* ambient toggle — pauses cosmic motion */
+let ambientOn = true;
+const ambientBtn = document.getElementById('ambientBtn');
+ambientBtn.addEventListener('click', ()=>{
+  ambientOn = !ambientOn;
+  ambientBtn.textContent = ambientOn ? '♪ Ambient: On' : '♪ Ambient: Off';
+  document.querySelectorAll('.nebula, .starfield').forEach(el=>{
+    el.style.animationPlayState = ambientOn ? 'running' : 'paused';
+  });
+  ambientPaused = !ambientOn;
+});
+
+/* ============ AMBIENT PARTICLE CANVAS ============ */
+const canvas = document.getElementById('bg-canvas');
+const ctx = canvas.getContext('2d');
+let particles = [];
+function resize(){
+  canvas.width = window.innerWidth;
+  canvas.height = window.innerHeight;
+}
+window.addEventListener('resize', resize);
+resize();
+
+const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+const PCOUNT = reduceMotion ? 0 : 70;
+for(let i=0;i<PCOUNT;i++){
+  particles.push({
+    x:Math.random()*canvas.width, y:Math.random()*canvas.height,
+    vx:(Math.random()-.5)*.15, vy:(Math.random()-.5)*.15,
+    r:Math.random()*1.4+.4
+  });
+}
+
+let ambientPaused = false;
+function tick(){
+  if(ambientPaused){ requestAnimationFrame(tick); return; }
+  ctx.clearRect(0,0,canvas.width,canvas.height);
+  particles.forEach(p=>{
+    p.x+=p.vx; p.y+=p.vy;
+    if(p.x<0||p.x>canvas.width) p.vx*=-1;
+    if(p.y<0||p.y>canvas.height) p.vy*=-1;
+    ctx.beginPath();
+    ctx.arc(p.x,p.y,p.r,0,Math.PI*2);
+    ctx.fillStyle='rgba(155,123,255,0.55)';
+    ctx.fill();
+  });
+  for(let i=0;i<particles.length;i++){
+    for(let j=i+1;j<particles.length;j++){
+      const a=particles[i], b=particles[j];
+      const d=Math.hypot(a.x-b.x,a.y-b.y);
+      if(d<130){
+        ctx.beginPath();
+        ctx.moveTo(a.x,a.y); ctx.lineTo(b.x,b.y);
+        ctx.strokeStyle=`rgba(87,168,255,${0.12*(1-d/130)})`;
+        ctx.lineWidth=1;
+        ctx.stroke();
+      }
+    }
+  }
+  requestAnimationFrame(tick);
+}
+if(!reduceMotion) tick();
+</script>
+
+</body>
+</html>

@@ -1,0 +1,502 @@
+You are an award-winning product designer, creative developer, and senior frontend engineer.
+
+I DO NOT want a normal scrolling portfolio website.
+
+I DO NOT want another React portfolio template.
+
+I DO NOT want sections stacked vertically.
+
+I DO NOT want cards on a page.
+
+I want an unforgettable interactive experience.
+
+The portfolio should feel like exploring a futuristic universe where every part of my life exists as its own world.
+
+========================================================
+THEME
+========================================================
+
+The entire portfolio represents my universe.
+
+Not a website.
+
+A universe.
+
+The landing page is a constellation floating in deep space.
+
+Stars connect together.
+
+Nebulas slowly move.
+
+Particles float.
+
+Constellations animate.
+
+Everything breathes slowly.
+
+The experience should feel cinematic, immersive and emotional.
+
+Think:
+
+Apple
+Framer
+Linear
+Nothing OS
+Interstellar
+No Man's Sky
+The Observatory in Death Stranding
+Anish Sphere
+
+without copying any of them.
+
+The design must be original.
+
+========================================================
+THE CONCEPT
+========================================================
+
+The homepage contains only a beautiful universe.
+
+Floating inside this universe are six different worlds.
+
+Each world represents one part of my life.
+
+When hovering over a world:
+
+• nearby stars brighten
+• constellation lines animate
+• the planet slowly rotates
+• labels become brighter
+• a preview card appears
+• ambient glow expands
+
+When clicking a world...
+
+The camera smoothly flies toward it.
+
+No page refresh.
+
+No scrolling.
+
+The user literally enters another world.
+
+Each world has completely different visuals.
+
+========================================================
+WORLD 1
+
+THE AI LABORATORY
+
+Theme:
+
+Purple
+
+Floating holograms
+
+Neural networks
+
+AI particles
+
+Animated data streams
+
+Floating windows
+
+Contains:
+
+ERA
+
+PathERA
+
+Emotion AI
+
+Future AI projects
+
+Interactive demos
+
+GitHub links
+
+Live demos
+
+Tech stack
+
+Animated architecture diagrams
+
+========================================================
+WORLD 2
+
+THE RESEARCH OBSERVATORY
+
+Theme:
+
+Blue
+
+Glass
+
+Scientific instruments
+
+Constellations
+
+Orbiting papers
+
+Contains
+
+Research papers
+
+Neuromorphic Computing Review
+
+DOI
+
+Zenodo publication
+
+Future papers
+
+Research interests
+
+Publication timeline
+
+Animated citation network
+
+When clicking a paper
+
+It opens like an actual research document.
+
+========================================================
+WORLD 3
+
+THE WRITER'S LIBRARY
+
+Theme:
+
+Warm gold
+
+Wood
+
+Candles
+
+Floating books
+
+Dust particles
+
+Soft lighting
+
+Contains
+
+Poetry
+
+Novels
+
+Short stories
+
+Creative writing
+
+PoetrySoup profile
+
+Wattpad
+
+WebNovel
+
+Every book opens with page-turn animation.
+
+Books have realistic depth.
+
+Firewalls and Flowers should appear as the featured novel.
+
+Its rankings should appear beautifully instead of as plain text.
+
+Show:
+
+Top #683 Feminism
+
+Top #112 Cyberbullying
+
+Top #21 Feminist Fiction
+
+Create elegant achievement badges.
+
+========================================================
+WORLD 4
+
+THE HALL OF MILESTONES
+
+Theme
+
+Orange
+
+Glass trophies
+
+Floating certificates
+
+Animated lights
+
+Contains
+
+USAII Global AI Hackathon Finalist
+
+Hackathons
+
+Achievements
+
+Certificates
+
+Milestones
+
+Every achievement should unlock with animation.
+
+Certificates should open in modal windows.
+
+Timeline should feel premium.
+
+========================================================
+WORLD 5
+
+THE STORY OF HIRA
+
+Theme
+
+Green
+
+Minimal
+
+Organic
+
+Living tree
+
+Timeline branches
+
+Instead of a normal About section...
+
+Create an interactive life journey.
+
+Different branches represent
+
+Engineering
+
+AI
+
+Research
+
+Poetry
+
+Writing
+
+Hackathons
+
+Every branch grows as the user explores.
+
+========================================================
+WORLD 6
+
+COMMUNICATION HUB
+
+Theme
+
+Pink
+
+Neon
+
+Glass
+
+Floating portals
+
+Every social link is represented as a portal.
+
+GitHub portal
+
+LinkedIn portal
+
+Email portal
+
+Instagram portal
+
+Devpost portal
+
+HackerRank portal
+
+Clicking a portal creates ripple effects.
+
+========================================================
+ANIMATIONS
+
+Everything must move.
+
+Nothing should ever feel static.
+
+Background slowly breathes.
+
+Nebulas drift.
+
+Stars twinkle.
+
+Camera moves smoothly.
+
+Hover effects are luxurious.
+
+No sudden animations.
+
+Everything uses premium easing.
+
+Like Apple.
+
+Like Framer.
+
+Use GSAP.
+
+Use Framer Motion.
+
+Use smooth camera interpolation.
+
+========================================================
+COLORS
+
+Deep black background.
+
+Soft cosmic gradients.
+
+Purple nebula.
+
+Blue nebula.
+
+Pink accents.
+
+Glass morphism.
+
+Subtle bloom.
+
+No harsh colors.
+
+========================================================
+TYPOGRAPHY
+
+Large bold typography.
+
+Readable from far away.
+
+Never use tiny text.
+
+Elegant spacing.
+
+Premium hierarchy.
+
+========================================================
+TECH STACK
+
+Use
+
+Next.js 15
+
+React
+
+TypeScript
+
+TailwindCSS
+
+Framer Motion
+
+GSAP
+
+Three.js
+
+React Three Fiber
+
+Drei
+
+Lenis Smooth Scroll (only where appropriate)
+
+Spline integration if useful
+
+Shadcn UI
+
+Lucide Icons
+
+========================================================
+PERFORMANCE
+
+60 FPS
+
+Optimized animations
+
+Lazy loading
+
+Responsive
+
+Mobile support
+
+Keyboard navigation
+
+Accessibility
+
+========================================================
+MY INFORMATION
+
+Name:
+Hira Fatima
+
+Role:
+AI Builder
+Researcher
+Developer
+Poet
+Novelist
+
+Tagline:
+
+Building products where intelligence meets creativity.
+
+Projects
+
+ERA
+
+PathERA
+
+AlgoCraft
+
+Decode Her Silence
+
+Gaming Website
+
+Research
+
+Neuromorphic Computing:
+A Theoretical Review of Synaptic Connections and Devices
+
+Published on Zenodo
+
+Writing
+
+PoetrySoup
+
+Wattpad
+
+WebNovel
+
+Achievements
+
+USAII Global AI Hackathon 2026
+Finalist
+
+Hackathons
+
+Research
+
+Creative Writing
+
+========================================================
+MOST IMPORTANT
+
+I DO NOT want this to feel like a portfolio.
+
+I want people to feel like they entered another universe.
+
+Every click should feel like discovering a new planet.
+
+Every section should tell a story.
+
+Every interaction should surprise users.
+
+I want recruiters to remember this portfolio even after seeing hundreds of others.
+
+This should feel like an award-winning Awwwards website rather than a personal portfolio.
+
+Take creative freedom.
+
+Push the design beyond conventional portfolios.
